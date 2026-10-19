@@ -12,4 +12,5 @@
   <project path="device/xiaomi/duchamp-kernel" name="device_xiaomi_duchamp-kernel" remote="mt6897" revision="a2fd5cb97fd76a4eb61fcfe11af03ae74bd57416" upstream="lineage-23.2" />
   <project path="hardware/xiaomi" name="hardware_xiaomi" remote="mt6897" revision="37fe5e4a6acbce4ca3d91e059fd7bd60a0890540" upstream="lineage-23.2" />
   <project path="hardware/dolby" name="hardware_dolby" remote="sai" revision="4d65bb6e75af1200c1acd3c2b8918fe8b8734229" upstream="sony-1.5" />
+  <project path="packages/apps/GameBar" name="packages_apps_GameBar" remote="mine" revision="duchamp-a17" />
 </manifest>
