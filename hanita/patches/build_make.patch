@@ -1,0 +1,26 @@
+From 54f1cb8b61ee21f1244853571d8f5e2261aa8ecc Mon Sep 17 00:00:00 2001
+From: HanaSkys <272953298+HanaSkys@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 18:47:19 +0000
+Subject: [PATCH] soong_extra_config: only treat
+ PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG=true as set
+
+---
+ core/soong_extra_config.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/soong_extra_config.mk b/core/soong_extra_config.mk
+index 53a70265ff..e36ebf4824 100644
+--- a/core/soong_extra_config.mk
++++ b/core/soong_extra_config.mk
+@@ -85,7 +85,7 @@ $(call add_json_str, VendorImageFileSystemType, $(BOARD_VENDORIMAGE_FILE_SYSTEM_
+ 
+ $(call add_json_list, BuildVersionTags, $(BUILD_VERSION_TAGS))
+ 
+-$(call add_json_bool, ProductNotDebuggableInUserdebug, $(PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG))
++$(call add_json_bool, ProductNotDebuggableInUserdebug, $(filter true,$(PRODUCT_NOT_DEBUGGABLE_IN_USERDEBUG)))
+ 
+ $(call add_json_bool, UsesProductImage, $(filter true,$(BOARD_USES_PRODUCTIMAGE)))
+ 
+-- 
+2.43.0
+

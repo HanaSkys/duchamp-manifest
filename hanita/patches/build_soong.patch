@@ -1,0 +1,78 @@
+From 0307a88bb4db53fce7776c56104ae0f01cfacb8e Mon Sep 17 00:00:00 2001
+From: HanaSkys <272953298+HanaSkys@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 18:47:19 +0000
+Subject: [PATCH] gen_build_prop: report userdebug when the product keeps it
+ debuggable
+
+---
+ scripts/gen_build_prop.py | 2 ++
+ ui/build/config.go        | 8 +++++++-
+ ui/build/rbe.go           | 6 +++---
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/gen_build_prop.py b/scripts/gen_build_prop.py
+index 6a5e70d4c..0f77ed21f 100644
+--- a/scripts/gen_build_prop.py
++++ b/scripts/gen_build_prop.py
+@@ -28,6 +28,8 @@ TEST_KEY_DIR = "build/make/target/product/security"
+ def get_build_variant(product_config):
+   if product_config["Eng"]:
+     return "eng"
++  elif product_config.get("Debuggable") and not product_config.get("ProductNotDebuggableInUserdebug"):
++    return "userdebug"
+   else:
+     return "user"
+ 
+diff --git a/ui/build/config.go b/ui/build/config.go
+index d2431f34a..3d37512fd 100644
+--- a/ui/build/config.go
++++ b/ui/build/config.go
+@@ -2044,7 +2044,13 @@ func (c *configImpl) KatiBin() string {
+ 	return c.PrebuiltBuildTool(binName)
+ }
+ 
+-func (c *configImpl) NinjaBin() string {
++func (c *configImpl) NinjaBin() string {/* SRA custom ninja begin */
++	if customNinja, ok := c.environ.Get("CUSTOM_NINJA_BIN"); ok && customNinja != "" {
++		return customNinja
++	} else if !ok {
++		return "/opt/ninja"
++	}
++/* SRA custom ninja end */
+ 	binName := "ninja"
+ 	if c.UseABFS() {
+ 		binName = "ninjago"
+diff --git a/ui/build/rbe.go b/ui/build/rbe.go
+index b3d95c453..6398af8f4 100644
+--- a/ui/build/rbe.go
++++ b/ui/build/rbe.go
+@@ -256,7 +256,7 @@ func startRBEproxy(ctx Context, config Config) {
+ 	e := ctx.BeginTrace(metrics.RunSetupTool, "rbe_bootstrap")
+ 	defer e.End()
+ 
+-	ctx.Status.Status("Starting rbe...")
++	ctx.Status.Status("Starting ninja...")
+ 	executable := config.SisoBin()
+ 	args := []string{
+ 		"proxy",
+@@ -330,7 +330,7 @@ func startReproxy(ctx Context, config Config) {
+ 	e := ctx.BeginTrace(metrics.RunSetupTool, "rbe_bootstrap")
+ 	defer e.End()
+ 
+-	ctx.Status.Status("Starting rbe...")
++	ctx.Status.Status("Starting ninja...")
+ 	cmd := Command(ctx, config, e, "startReproxy bootstrap", rbeCommand(ctx, config, bootstrapCmd))
+ 
+ 	if output, err := cmd.CombinedOutput(); err != nil {
+@@ -347,7 +347,7 @@ func stopRBE(ctx Context, config Config) {
+ 		cmd := Command(ctx, config, nil, "stopRBE bootstrap", rbeCommand(ctx, config, bootstrapCmd), "-shutdown")
+ 		output, err = cmd.CombinedOutput()
+ 		if err != nil {
+-			ctx.Fatalf("rbe bootstrap with shutdown failed with: %v\n%s\n", err, output)
++			ctx.Fatalf("soong bootstrap with shutdown failed with: %v\n%s\n", err, output)
+ 		}
+ 	}
+ 
+-- 
+2.43.0
+
