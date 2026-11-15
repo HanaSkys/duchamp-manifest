@@ -11,7 +11,7 @@
   <project path="vendor/xiaomi/duchamp-miuicamera" name="vendor_xiaomi_duchamp-miuicamera" remote="mine" revision="main" />
   <project path="device/mediatek/sepolicy_vndr" name="android_device_mediatek_sepolicy_vndr" remote="mine" revision="crdroid-a17" />
 
-  <!-- Own kernel: 6.1.176 LTS prebuilt (sources: HanaSkys/android_kernel_6.1, branch lts-2026-09) -->
+  <!-- Own kernel: 6.1.182 LTS prebuilt, tagged Hanita (sources: HanaSkys/android_kernel_6.1, branch lts-2026-11) -->
   <project path="device/xiaomi/duchamp-kernel" name="device_xiaomi_duchamp-kernel" remote="mine" revision="crdroid-a17" />
 
   <!-- Hardware -->
